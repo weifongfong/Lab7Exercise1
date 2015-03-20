@@ -43,6 +43,13 @@ public class MainActivity extends ActionBarActivity {
             case R.id.btBangkok:
                 w.execute("http://ict.siit.tu.ac.th/~cholwich/bangkok.json", "Bangkok Weather");
                 break;
+            case R.id.btNon:
+                w.execute("http://ict.siit.tu.ac.th/~cholwich/nonthaburi.json", "Nonthaburi Weather");
+                break;
+            case R.id.btPathum:
+                w.execute("http://ict.siit.tu.ac.th/~cholwich/pathumthani.json", "Pathumthani Weather");
+                break;
+
         }
     }
 
@@ -71,9 +78,9 @@ public class MainActivity extends ActionBarActivity {
     class WeatherTask extends AsyncTask<String, Void, Boolean> {
         String errorMsg = "";
         ProgressDialog pDialog;
-        String title;
+        String title,weather;
 
-        double windSpeed;
+        double windSpeed,temperature,humidity;
 
         @Override
         protected void onPreExecute() {
@@ -105,6 +112,9 @@ public class MainActivity extends ActionBarActivity {
                     JSONObject jWeather = new JSONObject(buffer.toString());
                     JSONObject jWind = jWeather.getJSONObject("wind");
                     windSpeed = jWind.getDouble("speed");
+                    temperature = jWeather.getJSONObject("main").getDouble("temp");
+                    humidity = jWeather.getJSONObject("main").getDouble("humidity");
+                    weather = jWeather.getJSONArray("weather").getJSONObject(0).getString("main");
                     errorMsg = "";
                     return true;
                 }
@@ -126,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(Boolean result) {
-            TextView tvTitle, tvWeather, tvWind;
+            TextView tvTitle, tvWeather, tvWind, tvTemp, tvHumid;
             if (pDialog.isShowing()) {
                 pDialog.dismiss();
             }
@@ -134,10 +144,16 @@ public class MainActivity extends ActionBarActivity {
             tvTitle = (TextView)findViewById(R.id.tvTitle);
             tvWeather = (TextView)findViewById(R.id.tvWeather);
             tvWind = (TextView)findViewById(R.id.tvWind);
+            tvTemp = (TextView)findViewById(R.id.tvTemp);
+            tvHumid = (TextView)findViewById(R.id.tvHumid);
+
 
             if (result) {
                 tvTitle.setText(title);
+                tvWeather.setText(weather);
                 tvWind.setText(String.format("%.1f", windSpeed));
+                tvTemp.setText(String.format("%.1f", temperature-273));
+                tvHumid.setText(String.format("%.1f", humidity)+"%");
             }
             else {
                 tvTitle.setText(errorMsg);
