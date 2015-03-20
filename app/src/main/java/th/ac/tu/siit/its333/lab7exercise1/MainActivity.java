@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +23,8 @@ import java.net.URL;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    long pTime = -1;
+    int pBt = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +43,37 @@ public class MainActivity extends ActionBarActivity {
         WeatherTask w = new WeatherTask();
         switch (id) {
             case R.id.btBangkok:
-                w.execute("http://ict.siit.tu.ac.th/~cholwich/bangkok.json", "Bangkok Weather");
+                if(pBt != id || System.currentTimeMillis()-pTime >= 60000) {
+                    w.execute("http://ict.siit.tu.ac.th/~cholwich/bangkok.json", "Bangkok Weather");
+                    pBt = id;
+                    pTime = System.currentTimeMillis();
+                }
+                else{
+                    Toast t = Toast.makeText(this,"1 min please.",Toast.LENGTH_SHORT);
+                    t.show();
+                }
                 break;
             case R.id.btNon:
-                w.execute("http://ict.siit.tu.ac.th/~cholwich/nonthaburi.json", "Nonthaburi Weather");
+                if(pBt != id || System.currentTimeMillis()-pTime >= 60000) {
+                    w.execute("http://ict.siit.tu.ac.th/~cholwich/nonthaburi.json", "Nonthaburi Weather");
+                    pBt = id;
+                    pTime = System.currentTimeMillis();
+                }
+                else{
+                    Toast t = Toast.makeText(this,"1 min please.",Toast.LENGTH_SHORT);
+                    t.show();
+                }
                 break;
             case R.id.btPathum:
-                w.execute("http://ict.siit.tu.ac.th/~cholwich/pathumthani.json", "Pathumthani Weather");
+                if(pBt != id || System.currentTimeMillis()-pTime >= 60000) {
+                    w.execute("http://ict.siit.tu.ac.th/~cholwich/pathumthani.json", "Pathumthani Weather");
+                    pBt = id;
+                    pTime = System.currentTimeMillis();
+                }
+                else{
+                    Toast t = Toast.makeText(this,"1 min please.",Toast.LENGTH_SHORT);
+                    t.show();
+                }
                 break;
 
         }
